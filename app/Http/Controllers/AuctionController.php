@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AuctionController extends Controller
 {
@@ -14,7 +16,8 @@ class AuctionController extends Controller
      */
     public function index()
     {
-        $auction = Auction::All();
+        // $auction = Auction::select('nft_id')->join('campaigns', 'auctions.campaign_id', '=', 'campaigns.id');
+        $auction = DB::table('auctions')->join('campaigns', 'auctions.campaign_id', '=', 'campaigns.id')->select('auctions.*', 'campaigns.*')->get();
         return response()->json($auction);
     }
 
@@ -58,7 +61,8 @@ class AuctionController extends Controller
      */
     public function show($id)
     {
-        $auction = Auction::where('nft_id', $id)->get()->first();
+        $auction = DB::table('auctions')->join('campaigns', 'auctions.campaign_id', '=', 'campaigns.id')->select('auctions.*', 'campaigns.*')->get()->first();
+
         return $auction;
     }
 
